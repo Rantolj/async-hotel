@@ -1,0 +1,9 @@
+CREATE USER atipik IDENTIFIED BY atipik;
+GRANT CONNECT, RESOURCE, IMP_FULL_DATABASE TO atipik;
+ALTER USER atipik QUOTA UNLIMITED ON USERS;
+
+
+Copy-Item "C:\Users\miran\Documents\ITU_S5\Dev\async-hotel\atipik0601.dmp" "C:\app\miran\admin\DBCOURS\dpdump"
+
+
+imp atipik/atipik@localhost:1521/DBCOURS.UNEPH.HT file="C:\Users\miran\Documents\ITU_S5\Dev\async-hotel\atipik0601.dmp" full=y

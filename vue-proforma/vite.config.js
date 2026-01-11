@@ -12,8 +12,17 @@ export default defineConfig({
       '/api': {
         target: 'http://127.0.0.1:8080',
         changeOrigin: true,
-        // Réécrire /api -> /asynclocation/api pour atteindre le servlet déployé
         rewrite: (path) => path.replace(/^\/api/, '/asynclocation/api'),
+        onError(err, req, res) {
+          res.writeHead(502, { 'Content-Type': 'text/plain' })
+          res.end('Proxy error: ' + (err?.code || 'Unknown'))
+        }
+      },
+      // Proxy REST pour éviter l'interception APJ
+      '/rest': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/rest/, '/asynclocation/rest'),
         onError(err, req, res) {
           res.writeHead(502, { 'Content-Type': 'text/plain' })
           res.end('Proxy error: ' + (err?.code || 'Unknown'))

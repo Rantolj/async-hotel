@@ -320,7 +320,7 @@ export default {
       return this.detailsSortDirection === 'asc' ? 'sort-icon-asc' : 'sort-icon-desc'
     },
     getPdfUrl() {
-      return `/api/export/proforma?id=${this.proforma.id}`
+      return `/rest/export/proforma?id=${this.proforma.id}`
     },
     async createBC() {
       try {

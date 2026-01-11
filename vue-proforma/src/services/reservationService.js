@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = '/api/reservation'
+const API_URL = '/rest/reservation'
 
 export default {
   // Réservations CRUD

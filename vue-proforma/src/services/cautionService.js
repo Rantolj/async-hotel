@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = '/api/mvtcaisse'
+const API_URL = '/rest/mvtcaisse'
 
 export default {
   // CRUD

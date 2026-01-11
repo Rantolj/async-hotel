@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+// Backend servlet is mapped under /api/proforma (proxied to /asynclocation/api/proforma)
 const API_URL = '/api/proforma'
 
 export default {
@@ -58,7 +59,8 @@ export default {
 
   // Export
   exportPdf(id) {
-    return axios.get(`/api/export/proforma`, { 
+    // Keep export endpoint under /api unless a dedicated /rest route exists
+    return axios.get(`/api/export/proforma`, {
       params: { id },
       responseType: 'blob'
     })

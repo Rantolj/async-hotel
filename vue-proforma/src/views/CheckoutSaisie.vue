@@ -273,28 +273,27 @@ export default {
       const idReservation = this.$route.params.id
       
       try {
-        const lignesSelected = this.lignesCheckout
+        const checkoutsData = this.lignesCheckout
           .filter(l => l.selected && !l.alreadyCheckedOut)
           .map(l => ({
-            idCheckin: l.idCheckin,
+            reservation: l.idCheckin,    // ID du check-in
+            daty: l.dateReception,       // Date de réception
+            heure: l.heureReception,     // Heure de réception
             quantite: l.quantite,
-            dateReception: l.dateReception,
-            heureReception: l.heureReception,
             responsable: l.responsable,
             jourRetard: l.jourRetard,
             retenue: l.retenue,
-            etatMateriel: l.etatMateriel
+            etatMateriel: this.getEtatMaterielValue(l.etatMateriel)
           }))
         
-        if (lignesSelected.length === 0) {
+        if (checkoutsData.length === 0) {
           this.errorMessage = 'Veuillez sélectionner au moins un produit à réceptionner.'
           this.submitting = false
           return
         }
         
         const data = {
-          idReservation: parseInt(idReservation),
-          lignes: lignesSelected
+          checkouts: checkoutsData
         }
         
         await reservationService.createCheckout(idReservation, data)
@@ -309,6 +308,16 @@ export default {
         this.errorMessage = e.response?.data?.error || e.message || 'Erreur lors de l\'enregistrement'
       } finally {
         this.submitting = false
+      }
+    },
+    
+    getEtatMaterielValue(etat) {
+      // Convertir le texte en valeur numérique pour le backend
+      switch (etat) {
+        case 'BON': return 0
+        case 'USAGE': return 1
+        case 'ENDOMMAGE': return 2
+        default: return 0
       }
     },
     

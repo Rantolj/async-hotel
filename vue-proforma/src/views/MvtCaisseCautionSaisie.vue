@@ -210,16 +210,24 @@ export default {
       this.errorMessage = ''
       const idReservation = this.$route.params.id
       try {
-        const [resaResp, initResp, cautionsResp] = await Promise.all([
+        // Charger réservation et init en parallèle (requis)
+        const [resaResp, initResp] = await Promise.all([
           reservationService.getById(idReservation),
-          cautionService.initCaution(idReservation),
-          cautionService.getByReservation(idReservation)
+          cautionService.initCaution(idReservation)
         ])
         
         this.reservation = resaResp.data
         this.caisses = initResp.data.caisses || []
         this.modesPaiement = initResp.data.modesPaiement || []
-        this.cautionsExistantes = cautionsResp.data || []
+        
+        // Charger les cautions existantes séparément (optionnel, peut échouer)
+        try {
+          const cautionsResp = await cautionService.getByReservation(idReservation)
+          this.cautionsExistantes = cautionsResp.data || []
+        } catch (cautionErr) {
+          console.warn('Cautions existantes non disponibles:', cautionErr.message)
+          this.cautionsExistantes = []
+        }
         
         // Calculer le total déjà versé
         this.totalDejaVerse = this.cautionsExistantes.reduce((sum, c) => sum + (c.montant || 0), 0)
